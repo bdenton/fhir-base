@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0" >
+
+	<!--  ++========================================++
+	      ||    S E R V E R    P U B L I S H E R    ||
+	      ++========================================++     
+	 -->
+	<bean id="fhir.server.publisher" class="dev.wdenton.fhir.osgi.server.FhirOsgiServerPublisher">
+	</bean>
+
+	<!--  ++=====================++
+	      ||    S E R V E R S    ||
+	      ++=====================++     
+	 -->
+	<reference-list id="fhir.osgi.servers" interface="dev.wdenton.fhir.osgi.server.IOsgiRestfulServer" availability="optional" >
+		<reference-listener ref="fhir.server.publisher"
+		               bind-method="registerFhirServer"
+		               unbind-method="unregisterFhirServer" />
+	</reference-list>
+
+	<!--  ++=========================++
+	      ||    P R O V I D E R S    ||
+	      ++=========================++     
+	 -->
+	<reference-list id="fhir.osgi.providers" interface="dev.wdenton.fhir.osgi.server.IOsgiProviderWrapper" availability="optional" >
+		<reference-listener ref="fhir.server.publisher"
+		               bind-method="registerFhirProvider"
+		               unbind-method="unregisterFhirProvider" />
+	</reference-list>
+	
+	<reference-list id="fhir.osgi.provider.collections" interface="dev.wdenton.fhir.osgi.server.IOsgiProviderCollection" availability="optional" >
+		<reference-listener ref="fhir.server.publisher"
+		               bind-method="registerFhirProviders"
+		               unbind-method="unregisterFhirProviders" />
+	</reference-list>
+
+</blueprint> 
